@@ -8,6 +8,7 @@
 
   var defaultOptions = {
     threshold: 0,
+    bottomThreshold: false,
     classNames: {
       aboveThreshold: 'ct-threshold-above',
       belowThreshold: 'ct-threshold-below'
@@ -74,8 +75,25 @@
           if (data.type === 'point') {
             // For points we can just use the data value and compare against the threshold in order to determine
             // the appropriate class
-            data.element.addClass(
-              data.value.y >= options.threshold ? options.classNames.aboveThreshold : options.classNames.belowThreshold
+            
+            
+            
+            if (!isNaN(options.bottomThreshold)) {
+               if (data.value.y >= options.threshold) {
+                 var thresholdClass = options.classNames.aboveThreshold;
+               } else {
+                 var thresholdClass = options.classNames.belowThreshold;
+               }
+            } else {
+              if (data.value.y >= options.threshold || data.value.y <= options.bottomThreshold) {
+                 var thresholdClass = options.classNames.aboveThreshold;
+               } else {
+                 var thresholdClass = options.classNames.belowThreshold;
+               }
+            }
+            
+            data.element.addClass(thresholdClass);
+              
             );
           } else if (data.type === 'line' || data.type === 'bar' || data.type === 'area') {
             // Cloning the original line path, mask it with the upper mask rect above the threshold and add the
